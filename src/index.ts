@@ -31,6 +31,7 @@ const board = new Array(boardHeight * boardWidth).fill(0);
 let currentY = 0;
 let currentX = 0;
 let currentPiece = 1;
+let currentRotation = 0;
 
 const ctx = canvas.getContext('2d');
 
@@ -75,8 +76,28 @@ const draw = () => {
       continue;
     }
 
-    const x = i % pieceWidth;
-    const y = Math.floor(i / pieceWidth);
+    let x = i % pieceWidth;
+    let y = Math.floor(i / pieceWidth);
+    switch (currentRotation) {
+      case 1:
+        {
+          let temp = x;
+          x = pieceHeight - 1 - y;
+          y = temp;
+        }
+        break;
+      case 2:
+        x = pieceWidth - 1 - x;
+        y = pieceHeight - 1 - y;
+        break;
+      case 3:
+        {
+          let temp = y;
+          y = pieceWidth - 1 - x;
+          x = temp;
+        }
+        break;
+    }
 
     const canvasX = (currentX + x) * boxWidth;
     const canvasY = (currentY + y) * boxWidth;
