@@ -46,6 +46,45 @@ document.addEventListener('gesturestart', e => {
   e.preventDefault();
 });
 
+const getRotatedPiece = (piece: number[], rotation: number) => {
+  const pieceHeight = 2;
+  const pieceWidth = piece.length / pieceHeight;
+  const newPiece = new Array(piece.length);
+
+  for (let i = 0; i < piece.length; i++) {
+    let x = i % pieceWidth;
+    let y = Math.floor(i / pieceWidth);
+    switch (rotation) {
+      case 1:
+        {
+          let temp = x;
+          x = pieceHeight - 1 - y;
+          y = temp;
+        }
+        break;
+      case 2:
+        x = pieceWidth - 1 - x;
+        y = pieceHeight - 1 - y;
+        break;
+      case 3:
+        {
+          let temp = y;
+          y = pieceWidth - 1 - x;
+          x = temp;
+        }
+        break;
+    }
+
+    if (rotation % 2 === 0) {
+      newPiece[y * pieceWidth + x] = piece[i];
+    } else {
+      newPiece[y * pieceHeight + x] = piece[i];
+    }
+  }
+
+  return newPiece;
+};
+
 const draw = () => {
   ctx.fillStyle = '#000000';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -67,37 +106,21 @@ const draw = () => {
 
   // Draw current piece.
   ctx.fillStyle = 'green';
-  const piece = tetrominos[currentPiece];
-  const pieceHeight = 2;
-  const pieceWidth = piece.length / pieceHeight;
+  const piece = getRotatedPiece(tetrominos[currentPiece], currentRotation);
+  let pieceHeight = 2;
+  let pieceWidth = piece.length / pieceHeight;
+
+  if (currentRotation % 2 === 1) {
+    [pieceHeight, pieceWidth] = [pieceWidth, pieceHeight];
+  }
 
   for (let i = 0; i < piece.length; i++) {
     if (piece[i] === 0) {
       continue;
     }
 
-    let x = i % pieceWidth;
-    let y = Math.floor(i / pieceWidth);
-    switch (currentRotation) {
-      case 1:
-        {
-          let temp = x;
-          x = pieceHeight - 1 - y;
-          y = temp;
-        }
-        break;
-      case 2:
-        x = pieceWidth - 1 - x;
-        y = pieceHeight - 1 - y;
-        break;
-      case 3:
-        {
-          let temp = y;
-          y = pieceWidth - 1 - x;
-          x = temp;
-        }
-        break;
-    }
+    const x = i % pieceWidth;
+    const y = Math.floor(i / pieceWidth);
 
     const canvasX = (currentX + x) * boxWidth;
     const canvasY = (currentY + y) * boxWidth;
