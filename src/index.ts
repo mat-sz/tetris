@@ -41,6 +41,23 @@ resetGameButton.addEventListener('click', () => {
   // Reset here
 });
 
+document.addEventListener('keydown', e => {
+  switch (e.key) {
+    case 'ArrowDown':
+      // TODO: Faster fall.
+      break;
+    case 'ArrowUp':
+      currentRotation = (currentRotation + 1) % 4;
+      break;
+    case 'ArrowLeft':
+      currentX--;
+      break;
+    case 'ArrowRight':
+      currentX++;
+      break;
+  }
+});
+
 document.addEventListener('gesturestart', e => {
   // Disable zoom on mobile Safari.
   e.preventDefault();
