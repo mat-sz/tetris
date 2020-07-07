@@ -11,19 +11,19 @@ canvas.height = boardHeight * boxWidth;
 
 const tetrominos = [
   // I
-  [1, 1, 1, 1],
+  [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0],
   // J
-  [1, 0, 0, 0, 1, 1, 1, 1],
+  [1, 0, 0, 1, 1, 1, 0, 0, 0],
   // L
-  [0, 0, 0, 1, 1, 1, 1, 1],
+  [0, 0, 1, 1, 1, 1, 0, 0, 0],
   // O
-  [1, 1, 1, 1],
+  [0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0],
   // S
-  [0, 1, 1, 1, 1, 0],
+  [0, 1, 1, 1, 1, 0, 0, 0, 0],
   // Z
-  [1, 1, 0, 0, 1, 1],
+  [1, 1, 0, 0, 1, 1, 0, 0, 0],
   // T
-  [0, 1, 0, 1, 1, 1],
+  [0, 1, 0, 1, 1, 1, 0, 0, 0],
 ];
 
 // Game state
@@ -64,39 +64,34 @@ document.addEventListener('gesturestart', e => {
 });
 
 const getRotatedPiece = (piece: number[], rotation: number) => {
-  const pieceHeight = 2;
-  const pieceWidth = piece.length / pieceHeight;
+  const pieceSize = piece.length === 16 ? 4 : 3;
   const newPiece = new Array(piece.length);
 
   for (let i = 0; i < piece.length; i++) {
-    let x = i % pieceWidth;
-    let y = Math.floor(i / pieceWidth);
+    let x = i % pieceSize;
+    let y = Math.floor(i / pieceSize);
     switch (rotation) {
       case 1:
         {
           let temp = x;
-          x = pieceHeight - 1 - y;
+          x = pieceSize - 1 - y;
           y = temp;
         }
         break;
       case 2:
-        x = pieceWidth - 1 - x;
-        y = pieceHeight - 1 - y;
+        x = pieceSize - 1 - x;
+        y = pieceSize - 1 - y;
         break;
       case 3:
         {
           let temp = y;
-          y = pieceWidth - 1 - x;
+          y = pieceSize - 1 - x;
           x = temp;
         }
         break;
     }
 
-    if (rotation % 2 === 0) {
-      newPiece[y * pieceWidth + x] = piece[i];
-    } else {
-      newPiece[y * pieceHeight + x] = piece[i];
-    }
+    newPiece[y * pieceSize + x] = piece[i];
   }
 
   return newPiece;
@@ -124,20 +119,15 @@ const draw = () => {
   // Draw current piece.
   ctx.fillStyle = 'green';
   const piece = getRotatedPiece(tetrominos[currentPiece], currentRotation);
-  let pieceHeight = 2;
-  let pieceWidth = piece.length / pieceHeight;
-
-  if (currentRotation % 2 === 1) {
-    [pieceHeight, pieceWidth] = [pieceWidth, pieceHeight];
-  }
+  const pieceSize = piece.length === 16 ? 4 : 3;
 
   for (let i = 0; i < piece.length; i++) {
     if (piece[i] === 0) {
       continue;
     }
 
-    const x = i % pieceWidth;
-    const y = Math.floor(i / pieceWidth);
+    const x = i % pieceSize;
+    const y = Math.floor(i / pieceSize);
 
     const canvasX = (currentX + x) * boxWidth;
     const canvasY = (currentY + y) * boxWidth;
