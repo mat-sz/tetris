@@ -27,7 +27,7 @@ const tetrominos = [
 ];
 
 // Game state
-const board = new Array(boardHeight * boardWidth).fill(0);
+let board = new Array(boardHeight * boardWidth).fill(0);
 let currentY = 0;
 let currentX = boardWidth / 2 - 2;
 let currentPiece = 1;
@@ -194,7 +194,11 @@ setInterval(step, 500);
 requestAnimationFrame(draw);
 
 resetGameButton.addEventListener('click', () => {
-  // Reset here
+  board = new Array(boardHeight * boardWidth).fill(0);
+  currentY = 0;
+  currentX = boardWidth / 2 - 2;
+  currentPiece = 1;
+  currentRotation = 0;
 });
 
 document.addEventListener('keydown', e => {
