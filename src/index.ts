@@ -147,6 +147,46 @@ const draw = () => {
   requestAnimationFrame(draw);
 };
 
+const nextPiece = () => {
+  const piece = getRotatedPiece(tetrominos[currentPiece], currentRotation);
+  const pieceSize = piece.length === 16 ? 4 : 3;
+  for (let i = 0; i < piece.length; i++) {
+    if (piece[i] === 0) {
+      continue;
+    }
+
+    const x = i % pieceSize;
+    const y = Math.floor(i / pieceSize);
+
+    const boardX = currentX + x;
+    const boardY = currentY + y;
+
+    board[boardY * boardWidth + boardX] = piece[i];
+  }
+
+  currentPiece = 1;
+  currentX = boardWidth / 2 - 2;
+  currentY = 0;
+};
+
+const step = () => {
+  if (
+    detectOverlap(
+      getRotatedPiece(tetrominos[currentPiece], currentRotation),
+      currentX,
+      currentY + 1,
+      board,
+      boardWidth
+    )
+  ) {
+    nextPiece();
+  } else {
+    currentY++;
+  }
+};
+
+setInterval(step, 500);
+
 requestAnimationFrame(draw);
 
 resetGameButton.addEventListener('click', () => {
