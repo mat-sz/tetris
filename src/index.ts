@@ -29,7 +29,7 @@ const tetrominos = [
 // Game state
 const board = new Array(boardHeight * boardWidth).fill(0);
 let currentY = 0;
-let currentX = 0;
+let currentX = boardWidth / 2 - 2;
 let currentPiece = 1;
 let currentRotation = 0;
 
@@ -90,7 +90,11 @@ const detectOverlap = (
     const boardX = pieceX + x;
     const boardY = pieceY + y;
 
-    if (boardX >= boardWidth || boardY >= board.length / boardWidth) {
+    if (
+      boardX >= boardWidth ||
+      boardX < 0 ||
+      boardY >= board.length / boardWidth
+    ) {
       return true;
     }
 
@@ -215,10 +219,30 @@ document.addEventListener('keydown', e => {
       }
       break;
     case 'ArrowLeft':
-      currentX--;
+      if (
+        !detectOverlap(
+          getRotatedPiece(tetrominos[currentPiece], currentRotation),
+          currentX - 1,
+          currentY,
+          board,
+          boardWidth
+        )
+      ) {
+        currentX--;
+      }
       break;
     case 'ArrowRight':
-      currentX++;
+      if (
+        !detectOverlap(
+          getRotatedPiece(tetrominos[currentPiece], currentRotation),
+          currentX + 1,
+          currentY,
+          board,
+          boardWidth
+        )
+      ) {
+        currentX++;
+      }
       break;
   }
 });
