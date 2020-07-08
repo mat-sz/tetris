@@ -37,33 +37,7 @@ const ctx = canvas.getContext('2d');
 
 const resetGameButton = document.getElementById('reset-game');
 
-resetGameButton.addEventListener('click', () => {
-  // Reset here
-});
-
-document.addEventListener('keydown', e => {
-  switch (e.key) {
-    case 'ArrowDown':
-      // TODO: Faster fall.
-      break;
-    case 'ArrowUp':
-      currentRotation = (currentRotation + 1) % 4;
-      break;
-    case 'ArrowLeft':
-      currentX--;
-      break;
-    case 'ArrowRight':
-      currentX++;
-      break;
-  }
-});
-
-document.addEventListener('gesturestart', e => {
-  // Disable zoom on mobile Safari.
-  e.preventDefault();
-});
-
-const getRotatedPiece = (piece: number[], rotation: number) => {
+const getRotatedPiece = (piece: number[], rotation: number): number[] => {
   const pieceSize = piece.length === 16 ? 4 : 3;
   const newPiece = new Array(piece.length);
 
@@ -96,6 +70,42 @@ const getRotatedPiece = (piece: number[], rotation: number) => {
 
   return newPiece;
 };
+
+const detectOverlap = (
+  piece: number[],
+  pieceX: number,
+  pieceY: number,
+  board: number[],
+  boardWidth: number
+): boolean => {
+  const pieceSize = piece.length === 16 ? 4 : 3;
+  for (let i = 0; i < piece.length; i++) {
+    if (piece[i] === 0) {
+      continue;
+    }
+
+    const x = i % pieceSize;
+    const y = Math.floor(i / pieceSize);
+
+    const boardX = pieceX + x;
+    const boardY = pieceY + y;
+
+    if (boardX >= boardWidth || boardY >= board.length / boardWidth) {
+      return true;
+    }
+
+    if (board[boardY * boardWidth + boardX] !== 0) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+document.addEventListener('gesturestart', e => {
+  // Disable zoom on mobile Safari.
+  e.preventDefault();
+});
 
 const draw = () => {
   ctx.fillStyle = '#000000';
@@ -138,3 +148,37 @@ const draw = () => {
 };
 
 requestAnimationFrame(draw);
+
+resetGameButton.addEventListener('click', () => {
+  // Reset here
+});
+
+document.addEventListener('keydown', e => {
+  switch (e.key) {
+    case 'ArrowDown':
+      // TODO: Faster fall.
+      break;
+    case 'ArrowUp':
+      for (let i = 0; i < 3; i++) {
+        if (
+          !detectOverlap(
+            getRotatedPiece(tetrominos[currentPiece], currentRotation + 1),
+            currentX,
+            currentY,
+            board,
+            boardWidth
+          )
+        ) {
+          currentRotation = (currentRotation + 1) % 4;
+          break;
+        }
+      }
+      break;
+    case 'ArrowLeft':
+      currentX--;
+      break;
+    case 'ArrowRight':
+      currentX++;
+      break;
+  }
+});
