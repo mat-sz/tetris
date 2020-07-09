@@ -83,6 +83,9 @@ const nextPiece = () => {
   state.pieceY = 0;
 };
 
+let stepInterval = 500;
+let stepTimeout: NodeJS.Timeout;
+
 const step = () => {
   if (
     detectOverlap(
@@ -97,9 +100,11 @@ const step = () => {
   } else {
     state.pieceY++;
   }
+
+  stepTimeout = setTimeout(step, stepInterval);
 };
 
-setInterval(step, 500);
+stepTimeout = setTimeout(step, stepInterval);
 
 requestAnimationFrame(draw);
 
@@ -110,7 +115,9 @@ resetGameButton.addEventListener('click', () => {
 document.addEventListener('keydown', e => {
   switch (e.key) {
     case 'ArrowDown':
-      // TODO: Faster fall.
+      stepInterval = 100;
+      clearTimeout(stepTimeout);
+      step();
       break;
     case 'ArrowUp':
       for (let i = 1; i < 4; i++) {
@@ -153,6 +160,14 @@ document.addEventListener('keydown', e => {
       ) {
         state.pieceX++;
       }
+      break;
+  }
+});
+
+document.addEventListener('keyup', e => {
+  switch (e.key) {
+    case 'ArrowDown':
+      stepInterval = 500;
       break;
   }
 });
