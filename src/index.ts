@@ -6,6 +6,7 @@ import {
   boxWidth,
   defaultInterval,
   quickInterval,
+  colors,
 } from './constants';
 import { GameState } from './gameState';
 
@@ -38,12 +39,12 @@ const draw = () => {
   gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
 
   // Draw board.
-  gameCtx.fillStyle = 'red';
   for (let i = 0; i < state.board.length; i++) {
     if (state.board[i] === 0) {
       continue;
     }
 
+    gameCtx.fillStyle = colors[state.board[i] - 1];
     const x = i % boardWidth;
     const y = Math.floor(i / boardWidth);
 
@@ -53,7 +54,7 @@ const draw = () => {
   }
 
   // Draw current piece.
-  gameCtx.fillStyle = 'green';
+  gameCtx.fillStyle = state.pieceColor;
 
   const { piece, pieceSize } = state;
   for (let i = 0; i < piece.length; i++) {
@@ -73,7 +74,7 @@ const draw = () => {
   nextPieceCtx.fillStyle = '#000000';
   nextPieceCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
 
-  nextPieceCtx.fillStyle = 'green';
+  nextPieceCtx.fillStyle = state.nextPieceColor;
 
   const { nextPiece, nextPieceSize } = state;
   for (let i = 0; i < nextPiece.length; i++) {

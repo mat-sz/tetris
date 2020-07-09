@@ -20,3 +20,5 @@ export const tetrominos = [
   // T
   [0, 1, 0, 1, 1, 1, 0, 0, 0],
 ];
+
+export const colors = ['#e0f0ea', '#95adbe', '#574f7d', '#503a65', '#3c2a4d'];

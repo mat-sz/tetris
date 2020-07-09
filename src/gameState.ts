@@ -1,9 +1,10 @@
-import { boardHeight, boardWidth, tetrominos } from './constants';
+import { boardHeight, boardWidth, tetrominos, colors } from './constants';
 import { Rotation } from './types';
 import { getRotatedPiece, detectOverlap, shuffle } from './functions';
 
 export class GameState {
   board: number[];
+  colorIndex: number;
   pieceIndex: number;
   pieceX: number;
   pieceY: number;
@@ -18,6 +19,7 @@ export class GameState {
     this.board = new Array(boardHeight * boardWidth).fill(0);
     this.pieceY = 0;
     this.pieceX = boardWidth / 2 - 2;
+    this.colorIndex = 0;
     this.pieceIndex = this.nextPieceIndex;
     this.pieceRotation = Rotation.ROTATE_0;
     this.pieceStack.shift();
@@ -55,6 +57,14 @@ export class GameState {
     return this.originalPiece.length === 16 ? 4 : 3;
   }
 
+  get pieceColor(): string {
+    return colors[this.colorIndex];
+  }
+
+  get nextPieceColor(): string {
+    return colors[(this.colorIndex + 1) % colors.length];
+  }
+
   commitPiece() {
     const { piece, pieceSize } = this;
     for (let i = 0; i < piece.length; i++) {
@@ -68,9 +78,10 @@ export class GameState {
       const boardX = this.pieceX + x;
       const boardY = this.pieceY + y;
 
-      this.board[boardY * boardWidth + boardX] = piece[i];
+      this.board[boardY * boardWidth + boardX] = this.colorIndex + 1;
     }
 
+    this.colorIndex = (this.colorIndex + 1) % colors.length;
     this.pieceIndex = this.nextPieceIndex;
     this.pieceX = boardWidth / 2 - 2;
     this.pieceY = 0;
