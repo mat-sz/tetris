@@ -7,20 +7,24 @@ import {
   defaultInterval,
   quickInterval,
 } from './constants';
-import { detectOverlap, getRotatedPiece } from './functions';
 import { GameState } from './gameState';
 
-const canvas: HTMLCanvasElement = document.getElementById(
-  'canvas'
+const gameCanvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
+
+const nextPieceCanvas = document.getElementById(
+  'nextPieceCanvas'
 ) as HTMLCanvasElement;
 
-canvas.width = boardWidth * boxWidth;
-canvas.height = boardHeight * boxWidth;
+gameCanvas.width = boardWidth * boxWidth;
+gameCanvas.height = boardHeight * boxWidth;
+nextPieceCanvas.width = 4 * boxWidth;
+nextPieceCanvas.height = 4 * boxWidth;
 
 // Game state
 const state = new GameState();
 
-const ctx = canvas.getContext('2d');
+const gameCtx = gameCanvas.getContext('2d');
+const nextPieceCtx = nextPieceCanvas.getContext('2d');
 
 const resetGameButton = document.getElementById('reset-game');
 
@@ -30,11 +34,11 @@ document.addEventListener('gesturestart', e => {
 });
 
 const draw = () => {
-  ctx.fillStyle = '#000000';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  gameCtx.fillStyle = '#000000';
+  gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
 
   // Draw board.
-  ctx.fillStyle = 'red';
+  gameCtx.fillStyle = 'red';
   for (let i = 0; i < state.board.length; i++) {
     if (state.board[i] === 0) {
       continue;
@@ -45,11 +49,11 @@ const draw = () => {
 
     const canvasX = x * boxWidth;
     const canvasY = y * boxWidth;
-    ctx.fillRect(canvasX, canvasY, boxWidth, boxWidth);
+    gameCtx.fillRect(canvasX, canvasY, boxWidth, boxWidth);
   }
 
   // Draw current piece.
-  ctx.fillStyle = 'green';
+  gameCtx.fillStyle = 'green';
 
   const { piece, pieceSize } = state;
   for (let i = 0; i < piece.length; i++) {
@@ -62,7 +66,27 @@ const draw = () => {
 
     const canvasX = (state.pieceX + x) * boxWidth;
     const canvasY = (state.pieceY + y) * boxWidth;
-    ctx.fillRect(canvasX, canvasY, boxWidth, boxWidth);
+    gameCtx.fillRect(canvasX, canvasY, boxWidth, boxWidth);
+  }
+
+  // Draw next piece.
+  nextPieceCtx.fillStyle = '#000000';
+  nextPieceCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+
+  nextPieceCtx.fillStyle = 'green';
+
+  const { nextPiece, nextPieceSize } = state;
+  for (let i = 0; i < nextPiece.length; i++) {
+    if (nextPiece[i] === 0) {
+      continue;
+    }
+
+    const x = i % nextPieceSize;
+    const y = Math.floor(i / nextPieceSize);
+
+    const canvasX = x * boxWidth;
+    const canvasY = y * boxWidth;
+    nextPieceCtx.fillRect(canvasX, canvasY, boxWidth, boxWidth);
   }
 
   requestAnimationFrame(draw);

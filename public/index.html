@@ -75,7 +75,13 @@
       <button id="reset-game">Reset game</button>
     </div>
     <div class="canvases">
-      <canvas id="canvas" width="800" height="800"></canvas>
+      <div class="game">
+        <canvas id="gameCanvas" width="800" height="800"></canvas>
+      </div>
+      <div class="status">
+        <span>Next piece:</span>
+        <canvas id="nextPieceCanvas" width="800" height="800"></canvas>
+      </div>
     </div>
     <p>
       <a href="https://github.com/mat-sz/tetris">GitHub project page.</a>

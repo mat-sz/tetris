@@ -18,7 +18,7 @@ export class GameState {
     this.board = new Array(boardHeight * boardWidth).fill(0);
     this.pieceY = 0;
     this.pieceX = boardWidth / 2 - 2;
-    this.pieceIndex = this.nextPiece;
+    this.pieceIndex = this.nextPieceIndex;
     this.pieceRotation = Rotation.ROTATE_0;
     this.pieceStack.shift();
   }
@@ -31,8 +31,16 @@ export class GameState {
     return this._pieceStack;
   }
 
-  get nextPiece(): number {
+  get nextPieceIndex(): number {
     return this.pieceStack[0];
+  }
+
+  get nextPiece(): number[] {
+    return tetrominos[this.nextPieceIndex];
+  }
+
+  get nextPieceSize(): number {
+    return this.nextPiece.length === 16 ? 4 : 3;
   }
 
   get originalPiece(): number[] {
@@ -63,7 +71,7 @@ export class GameState {
       this.board[boardY * boardWidth + boardX] = piece[i];
     }
 
-    this.pieceIndex = this.nextPiece;
+    this.pieceIndex = this.nextPieceIndex;
     this.pieceX = boardWidth / 2 - 2;
     this.pieceY = 0;
     this.pieceStack.shift();
