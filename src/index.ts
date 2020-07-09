@@ -1,6 +1,12 @@
 import './App.scss';
 
-import { boardHeight, boardWidth, boxWidth } from './constants';
+import {
+  boardHeight,
+  boardWidth,
+  boxWidth,
+  defaultInterval,
+  quickInterval,
+} from './constants';
 import { detectOverlap, getRotatedPiece } from './functions';
 import { GameState } from './gameState';
 
@@ -62,45 +68,11 @@ const draw = () => {
   requestAnimationFrame(draw);
 };
 
-const nextPiece = () => {
-  const { piece, pieceSize } = state;
-  for (let i = 0; i < piece.length; i++) {
-    if (piece[i] === 0) {
-      continue;
-    }
-
-    const x = i % pieceSize;
-    const y = Math.floor(i / pieceSize);
-
-    const boardX = state.pieceX + x;
-    const boardY = state.pieceY + y;
-
-    state.board[boardY * boardWidth + boardX] = piece[i];
-  }
-
-  state.pieceIndex = 1;
-  state.pieceX = boardWidth / 2 - 2;
-  state.pieceY = 0;
-};
-
-let stepInterval = 500;
+let stepInterval = defaultInterval;
 let stepTimeout: NodeJS.Timeout;
 
 const step = () => {
-  if (
-    detectOverlap(
-      state.piece,
-      state.pieceX,
-      state.pieceY + 1,
-      state.board,
-      boardWidth
-    )
-  ) {
-    nextPiece();
-  } else {
-    state.pieceY++;
-  }
-
+  state.step();
   stepTimeout = setTimeout(step, stepInterval);
 };
 
@@ -115,51 +87,18 @@ resetGameButton.addEventListener('click', () => {
 document.addEventListener('keydown', e => {
   switch (e.key) {
     case 'ArrowDown':
-      stepInterval = 100;
+      stepInterval = quickInterval;
       clearTimeout(stepTimeout);
       step();
       break;
     case 'ArrowUp':
-      for (let i = 1; i < 4; i++) {
-        if (
-          !detectOverlap(
-            getRotatedPiece(state.originalPiece, (state.pieceRotation + i) % 4),
-            state.pieceX,
-            state.pieceY,
-            state.board,
-            boardWidth
-          )
-        ) {
-          state.pieceRotation = (state.pieceRotation + i) % 4;
-          break;
-        }
-      }
+      state.rotate();
       break;
     case 'ArrowLeft':
-      if (
-        !detectOverlap(
-          state.piece,
-          state.pieceX - 1,
-          state.pieceY,
-          state.board,
-          boardWidth
-        )
-      ) {
-        state.pieceX--;
-      }
+      state.moveX(-1);
       break;
     case 'ArrowRight':
-      if (
-        !detectOverlap(
-          state.piece,
-          state.pieceX + 1,
-          state.pieceY,
-          state.board,
-          boardWidth
-        )
-      ) {
-        state.pieceX++;
-      }
+      state.moveX(1);
       break;
   }
 });
@@ -167,7 +106,7 @@ document.addEventListener('keydown', e => {
 document.addEventListener('keyup', e => {
   switch (e.key) {
     case 'ArrowDown':
-      stepInterval = 500;
+      stepInterval = defaultInterval;
       break;
   }
 });

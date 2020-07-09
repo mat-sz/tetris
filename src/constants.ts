@@ -1,6 +1,8 @@
 export const boxWidth = 40;
 export const boardWidth = 10;
 export const boardHeight = 20;
+export const defaultInterval = 500;
+export const quickInterval = 100;
 
 export const tetrominos = [
   // I
