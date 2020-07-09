@@ -69,7 +69,7 @@ const draw = () => {
 };
 
 let stepInterval = defaultInterval;
-let stepTimeout: NodeJS.Timeout;
+let stepTimeout: number;
 
 const step = () => {
   state.step();
