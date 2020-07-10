@@ -7,6 +7,7 @@ import {
   defaultInterval,
   quickInterval,
   colors,
+  animationLength,
 } from './constants';
 import { GameState } from './gameState';
 
@@ -44,14 +45,22 @@ const draw = () => {
       continue;
     }
 
+    gameCtx.globalAlpha = 1;
     gameCtx.fillStyle = colors[state.board[i] - 1];
     const x = i % boardWidth;
     const y = Math.floor(i / boardWidth);
+
+    if (state.animationProgress > 0 && state.animationRows?.includes(y)) {
+      console.log('animation!');
+      gameCtx.globalAlpha = 1 - state.animationProgress / animationLength;
+    }
 
     const canvasX = x * boxWidth;
     const canvasY = y * boxWidth;
     gameCtx.fillRect(canvasX, canvasY, boxWidth, boxWidth);
   }
+
+  state.animationStep();
 
   // Draw current piece.
   gameCtx.fillStyle = state.pieceColor;

@@ -1,4 +1,10 @@
-import { boardHeight, boardWidth, tetrominos, colors } from './constants';
+import {
+  boardHeight,
+  boardWidth,
+  tetrominos,
+  colors,
+  animationLength,
+} from './constants';
 import { Rotation } from './types';
 import {
   getRotatedPiece,
@@ -14,6 +20,8 @@ export class GameState {
   pieceIndex: number;
   pieceX: number;
   pieceY: number;
+  animationProgress: number;
+  animationRows: number[];
   pieceRotation: Rotation;
   private _pieceStack: number[] = [];
 
@@ -28,6 +36,8 @@ export class GameState {
     this.colorIndex = 0;
     this.pieceIndex = this.nextPieceIndex;
     this.pieceRotation = Rotation.ROTATE_0;
+    this.animationProgress = 0;
+    this.animationRows = [];
     this.pieceStack.shift();
   }
 
@@ -94,7 +104,30 @@ export class GameState {
     this.pieceStack.shift();
   }
 
+  animationStep() {
+    if (!this.animationRows || this.animationRows.length == 0) {
+      this.animationProgress = 0;
+      return;
+    }
+
+    if (this.animationProgress < animationLength) {
+      this.animationProgress++;
+    } else {
+      this.animationProgress = 0;
+
+      for (const rowY of this.animationRows) {
+        this.board = removeRow(this.board, boardWidth, rowY);
+      }
+
+      this.animationRows = [];
+    }
+  }
+
   step() {
+    if (this.animationProgress !== 0) {
+      return;
+    }
+
     if (
       detectOverlap(
         this.piece,
@@ -111,8 +144,12 @@ export class GameState {
 
     for (let rowY = 0; rowY < boardHeight; rowY++) {
       if (checkRow(this.board, boardWidth, rowY)) {
-        this.board = removeRow(this.board, boardWidth, rowY);
+        this.animationRows.push(rowY);
       }
+    }
+
+    if (this.animationRows?.length > 0) {
+      this.animationProgress = 1;
     }
   }
 
