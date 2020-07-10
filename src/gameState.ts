@@ -31,10 +31,10 @@ export class GameState {
 
   reset() {
     this.board = new Array(boardHeight * boardWidth).fill(0);
-    this.pieceY = 0;
+    this.pieceIndex = this.nextPieceIndex;
+    this.pieceY = -1 * this.pieceSize;
     this.pieceX = boardWidth / 2 - 2;
     this.colorIndex = 0;
-    this.pieceIndex = this.nextPieceIndex;
     this.pieceRotation = Rotation.ROTATE_0;
     this.animationProgress = 0;
     this.animationRows = [];
@@ -99,9 +99,9 @@ export class GameState {
 
     this.colorIndex = (this.colorIndex + 1) % colors.length;
     this.pieceIndex = this.nextPieceIndex;
-    this.pieceX = boardWidth / 2 - 2;
-    this.pieceY = 0;
     this.pieceStack.shift();
+    this.pieceX = boardWidth / 2 - 2;
+    this.pieceY = -1 * this.pieceSize;
   }
 
   animationStep() {

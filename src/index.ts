@@ -8,6 +8,7 @@ import {
   quickInterval,
   colors,
   animationLength,
+  boardTopPadding,
 } from './constants';
 import { GameState } from './gameState';
 
@@ -18,7 +19,7 @@ const nextPieceCanvas = document.getElementById(
 ) as HTMLCanvasElement;
 
 gameCanvas.width = boardWidth * boxWidth;
-gameCanvas.height = boardHeight * boxWidth;
+gameCanvas.height = (boardHeight + boardTopPadding) * boxWidth;
 nextPieceCanvas.width = 4 * boxWidth;
 nextPieceCanvas.height = 4 * boxWidth;
 
@@ -55,7 +56,7 @@ const draw = () => {
     }
 
     const canvasX = x * boxWidth;
-    const canvasY = y * boxWidth;
+    const canvasY = (y + boardTopPadding) * boxWidth;
     gameCtx.fillRect(canvasX, canvasY, boxWidth, boxWidth);
   }
 
@@ -73,8 +74,13 @@ const draw = () => {
     const x = i % pieceSize;
     const y = Math.floor(i / pieceSize);
 
+    gameCtx.globalAlpha = 1;
+    if (state.pieceY + y < 0) {
+      gameCtx.globalAlpha = 0.5;
+    }
+
     const canvasX = (state.pieceX + x) * boxWidth;
-    const canvasY = (state.pieceY + y) * boxWidth;
+    const canvasY = (state.pieceY + y + boardTopPadding) * boxWidth;
     gameCtx.fillRect(canvasX, canvasY, boxWidth, boxWidth);
   }
 
