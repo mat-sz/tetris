@@ -4,7 +4,9 @@ export const boardHeight = 20;
 export const defaultInterval = 500;
 export const quickInterval = 100;
 export const animationLength = 30;
+export const canvasPadding = 1;
 export const boardTopPadding = 4;
+export const boardRightPadding = 5;
 
 export const tetrominos = [
   // I

@@ -9,27 +9,27 @@ import {
   colors,
   animationLength,
   boardTopPadding,
+  boardRightPadding,
+  canvasPadding,
 } from './constants';
 import { GameState } from './gameState';
 
 const gameCanvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
 
-const nextPieceCanvas = document.getElementById(
-  'nextPieceCanvas'
-) as HTMLCanvasElement;
-
-gameCanvas.width = boardWidth * boxWidth;
-gameCanvas.height = (boardHeight + boardTopPadding) * boxWidth;
-nextPieceCanvas.width = 4 * boxWidth;
-nextPieceCanvas.height = 4 * boxWidth;
+gameCanvas.width =
+  (boardWidth + boardRightPadding + canvasPadding * 2) * boxWidth;
+gameCanvas.height =
+  (boardHeight + boardTopPadding + canvasPadding * 2) * boxWidth;
 
 // Game state
 const state = new GameState();
 
 const gameCtx = gameCanvas.getContext('2d');
-const nextPieceCtx = nextPieceCanvas.getContext('2d');
 
 const resetGameButton = document.getElementById('reset-game');
+
+const getCanvasX = (x: number) => (x + canvasPadding) * boxWidth;
+const getCanvasY = (y: number) => (y + canvasPadding) * boxWidth;
 
 document.addEventListener('gesturestart', e => {
   // Disable zoom on mobile Safari.
@@ -55,8 +55,8 @@ const draw = () => {
       gameCtx.globalAlpha = 1 - state.animationProgress / animationLength;
     }
 
-    const canvasX = x * boxWidth;
-    const canvasY = (y + boardTopPadding) * boxWidth;
+    const canvasX = getCanvasX(x);
+    const canvasY = getCanvasY(y + boardTopPadding);
     gameCtx.fillRect(canvasX, canvasY, boxWidth, boxWidth);
   }
 
@@ -76,19 +76,18 @@ const draw = () => {
 
     gameCtx.globalAlpha = 1;
     if (state.pieceY + y < 0) {
-      gameCtx.globalAlpha = 0.5;
+      gameCtx.globalAlpha = 0.25;
     }
 
-    const canvasX = (state.pieceX + x) * boxWidth;
-    const canvasY = (state.pieceY + y + boardTopPadding) * boxWidth;
+    const canvasX = getCanvasX(state.pieceX + x);
+    const canvasY = getCanvasY(state.pieceY + y + boardTopPadding);
     gameCtx.fillRect(canvasX, canvasY, boxWidth, boxWidth);
   }
 
-  // Draw next piece.
-  nextPieceCtx.fillStyle = '#000000';
-  nextPieceCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+  gameCtx.globalAlpha = 1;
 
-  nextPieceCtx.fillStyle = state.nextPieceColor;
+  // Draw next piece.
+  gameCtx.fillStyle = state.nextPieceColor;
 
   const { nextPiece, nextPieceSize } = state;
   for (let i = 0; i < nextPiece.length; i++) {
@@ -99,10 +98,33 @@ const draw = () => {
     const x = i % nextPieceSize;
     const y = Math.floor(i / nextPieceSize);
 
-    const canvasX = x * boxWidth;
-    const canvasY = y * boxWidth;
-    nextPieceCtx.fillRect(canvasX, canvasY, boxWidth, boxWidth);
+    const canvasX = getCanvasX(boardWidth + 1 + x);
+    const canvasY = getCanvasY(boardTopPadding + y);
+    gameCtx.fillRect(canvasX, canvasY, boxWidth, boxWidth);
   }
+
+  // Draw static elements.
+  gameCtx.strokeStyle = '#ffffff';
+  gameCtx.strokeRect(
+    getCanvasX(0),
+    getCanvasY(boardTopPadding),
+    getCanvasX(boardWidth) - getCanvasX(0),
+    getCanvasY(boardHeight + boardTopPadding) - getCanvasY(boardTopPadding)
+  );
+  gameCtx.strokeRect(
+    getCanvasX(boardWidth + 1),
+    getCanvasY(boardTopPadding),
+    getCanvasX(boardWidth + 5) - getCanvasX(boardWidth + 1),
+    getCanvasY(boardTopPadding + 4) - getCanvasY(boardTopPadding)
+  );
+
+  gameCtx.fillStyle = '#ffffff';
+  gameCtx.font = '20px Arial';
+  gameCtx.fillText(
+    'Next piece:',
+    getCanvasX(boardWidth + 1),
+    getCanvasY(boardTopPadding) - 14
+  );
 
   requestAnimationFrame(draw);
 };

@@ -28,19 +28,11 @@ a {
   justify-content: center;
   padding: 0 10px;
   flex-direction: row;
-
-  .status {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-left: 20px;
-  }
 }
 
 canvas {
   max-width: 100%;
   height: auto;
-  border: 2px solid #ccc;
 }
 
 .controls {
