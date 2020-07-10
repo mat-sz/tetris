@@ -23,6 +23,7 @@ export class GameState {
   animationProgress: number;
   animationRows: number[];
   pieceRotation: Rotation;
+  gameOver: boolean;
   private _pieceStack: number[] = [];
 
   constructor() {
@@ -38,6 +39,7 @@ export class GameState {
     this.pieceRotation = Rotation.ROTATE_0;
     this.animationProgress = 0;
     this.animationRows = [];
+    this.gameOver = false;
     this.pieceStack.shift();
   }
 
@@ -128,7 +130,7 @@ export class GameState {
   }
 
   step() {
-    if (this.animationProgress !== 0) {
+    if (this.animationProgress !== 0 || this.gameOver) {
       return;
     }
 

@@ -118,6 +118,7 @@ const draw = () => {
     getCanvasY(boardTopPadding + 4) - getCanvasY(boardTopPadding)
   );
 
+  gameCtx.textAlign = 'left';
   gameCtx.fillStyle = '#ffffff';
   gameCtx.font = '20px Arial';
   gameCtx.fillText(
@@ -125,6 +126,17 @@ const draw = () => {
     getCanvasX(boardWidth + 1),
     getCanvasY(boardTopPadding) - 14
   );
+
+  if (state.gameOver) {
+    gameCtx.globalAlpha = 0.5;
+    gameCtx.fillStyle = '#000000';
+    gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+
+    gameCtx.textAlign = 'center';
+    gameCtx.fillStyle = '#ffffff';
+    gameCtx.globalAlpha = 1;
+    gameCtx.fillText('GAME OVER', gameCanvas.width / 2, gameCanvas.height / 2);
+  }
 
   requestAnimationFrame(draw);
 };
