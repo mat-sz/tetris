@@ -123,10 +123,16 @@ export class GameState {
     }
   }
 
+  hardDrop() {
+    while (!this.step()) {}
+  }
+
   step() {
     if (this.animationProgress !== 0) {
       return;
     }
+
+    let pieceCommitted = false;
 
     if (
       detectOverlap(
@@ -138,19 +144,22 @@ export class GameState {
       )
     ) {
       this.commitPiece();
+      pieceCommitted = true;
+
+      for (let rowY = 0; rowY < boardHeight; rowY++) {
+        if (checkRow(this.board, boardWidth, rowY)) {
+          this.animationRows.push(rowY);
+        }
+      }
+
+      if (this.animationRows?.length > 0) {
+        this.animationProgress = 1;
+      }
     } else {
       this.pieceY++;
     }
 
-    for (let rowY = 0; rowY < boardHeight; rowY++) {
-      if (checkRow(this.board, boardWidth, rowY)) {
-        this.animationRows.push(rowY);
-      }
-    }
-
-    if (this.animationRows?.length > 0) {
-      this.animationProgress = 1;
-    }
+    return pieceCommitted;
   }
 
   moveX(amount = 0) {

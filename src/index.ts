@@ -51,7 +51,6 @@ const draw = () => {
     const y = Math.floor(i / boardWidth);
 
     if (state.animationProgress > 0 && state.animationRows?.includes(y)) {
-      console.log('animation!');
       gameCtx.globalAlpha = 1 - state.animationProgress / animationLength;
     }
 
@@ -119,7 +118,12 @@ resetGameButton.addEventListener('click', () => {
 });
 
 document.addEventListener('keydown', e => {
+  e.preventDefault();
+
   switch (e.key) {
+    case ' ':
+      state.hardDrop();
+      break;
     case 'ArrowDown':
       stepInterval = quickInterval;
       clearTimeout(stepTimeout);
