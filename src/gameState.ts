@@ -126,12 +126,16 @@ export class GameState {
   }
 
   hardDrop() {
+    if (this.gameOver) {
+      return;
+    }
+
     while (!this.step()) {}
   }
 
   step() {
     if (this.animationProgress !== 0 || this.gameOver) {
-      return;
+      return false;
     }
 
     let pieceCommitted = false;
