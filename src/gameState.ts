@@ -1,6 +1,12 @@
 import { boardHeight, boardWidth, tetrominos, colors } from './constants';
 import { Rotation } from './types';
-import { getRotatedPiece, detectOverlap, shuffle } from './functions';
+import {
+  getRotatedPiece,
+  detectOverlap,
+  shuffle,
+  checkRow,
+  removeRow,
+} from './functions';
 
 export class GameState {
   board: number[];
@@ -101,6 +107,12 @@ export class GameState {
       this.commitPiece();
     } else {
       this.pieceY++;
+    }
+
+    for (let rowY = 0; rowY < boardHeight; rowY++) {
+      if (checkRow(this.board, boardWidth, rowY)) {
+        this.board = removeRow(this.board, boardWidth, rowY);
+      }
     }
   }
 

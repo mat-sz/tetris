@@ -72,6 +72,36 @@ export const detectOverlap = (
   return false;
 };
 
+export const checkRow = (board: number[], boardWidth: number, rowY: number) => {
+  for (let i = 0; i < boardWidth; i++) {
+    if (board[rowY * boardWidth + i] === 0) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+export const removeRow = (
+  board: number[],
+  boardWidth: number,
+  rowY: number
+) => {
+  const newBoard = [...board];
+
+  if (rowY !== 0) {
+    for (let i = boardWidth; i < (rowY + 1) * boardWidth; i++) {
+      newBoard[i] = board[i - boardWidth];
+    }
+  }
+
+  for (let i = 0; i < boardWidth; i++) {
+    newBoard[i] = 0;
+  }
+
+  return newBoard;
+};
+
 export function shuffle<T>(array: T[]): T[] {
   const a = [...array];
   for (let i = a.length - 1; i > 0; i--) {
