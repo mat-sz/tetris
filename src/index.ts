@@ -122,6 +122,11 @@ const draw = () => {
   gameCtx.fillStyle = '#ffffff';
   gameCtx.font = '20px Arial';
   gameCtx.fillText(
+    'Score: ' + state.score,
+    getCanvasX(boardWidth + 1),
+    getCanvasY(boardTopPadding - 1) - 14
+  );
+  gameCtx.fillText(
     'Next piece:',
     getCanvasX(boardWidth + 1),
     getCanvasY(boardTopPadding) - 14
