@@ -161,6 +161,7 @@ stepTimeout = setTimeout(step, stepInterval);
 requestAnimationFrame(draw);
 
 resetGameButton.addEventListener('click', () => {
+  resetGameButton.blur();
   state.reset();
 });
 
