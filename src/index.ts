@@ -95,8 +95,10 @@ const draw = () => {
       continue;
     }
 
-    const x = i % nextPieceSize;
-    const y = Math.floor(i / nextPieceSize);
+    const offsetX = nextPieceSize === 3 ? 0.5 : 0;
+    const offsetY = nextPieceSize === 3 ? 1 : 0;
+    const x = (i % nextPieceSize) + offsetX;
+    const y = Math.floor(i / nextPieceSize) + offsetY;
 
     const canvasX = getCanvasX(boardWidth + 1 + x);
     const canvasY = getCanvasY(boardTopPadding + y);
