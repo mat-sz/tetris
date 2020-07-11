@@ -154,6 +154,11 @@ export class GameState {
         boardWidth
       )
     ) {
+      if (this.pieceY < 0) {
+        this.gameOver = true;
+        return true;
+      }
+
       this.commitPiece();
       pieceCommitted = true;
 

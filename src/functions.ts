@@ -44,10 +44,6 @@ export const detectOverlap = (
   board: number[],
   boardWidth: number
 ): boolean => {
-  if (pieceY < 0) {
-    return false;
-  }
-
   const pieceSize = piece.length === 16 ? 4 : 3;
   for (let i = 0; i < piece.length; i++) {
     if (piece[i] === 0) {
@@ -59,6 +55,10 @@ export const detectOverlap = (
 
     const boardX = pieceX + x;
     const boardY = pieceY + y;
+
+    if (boardY < 0) {
+      return false;
+    }
 
     if (
       boardX >= boardWidth ||
