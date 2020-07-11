@@ -4,6 +4,7 @@ import {
   tetrominos,
   colors,
   animationLength,
+  tPieceIndex,
 } from './constants';
 import { Rotation } from './types';
 import {
@@ -24,6 +25,8 @@ export class GameState {
   animationRows: number[];
   pieceRotation: Rotation;
   gameOver: boolean;
+  score: number;
+  tSpin: boolean;
   private _pieceStack: number[] = [];
 
   constructor() {
@@ -40,6 +43,8 @@ export class GameState {
     this.animationProgress = 0;
     this.animationRows = [];
     this.gameOver = false;
+    this.score = 0;
+    this.tSpin = false;
     this.pieceStack.shift();
   }
 
@@ -160,11 +165,20 @@ export class GameState {
 
       if (this.animationRows?.length > 0) {
         this.animationProgress = 1;
+        if (this.tSpin) {
+          this.score += this.animationRows.length * 400;
+        } else {
+          this.score +=
+            this.animationRows.length === 1
+              ? 100
+              : this.animationRows.length * 200;
+        }
       }
     } else {
       this.pieceY++;
     }
 
+    this.tSpin = false;
     return pieceCommitted;
   }
 
@@ -186,6 +200,9 @@ export class GameState {
           boardWidth
         )
       ) {
+        if (this.pieceIndex === tPieceIndex) {
+          this.tSpin = true;
+        }
         this.pieceRotation = (this.pieceRotation + i) % 4;
         break;
       }
