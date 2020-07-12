@@ -165,6 +165,16 @@ resetGameButton.addEventListener('click', () => {
   state.reset();
 });
 
+const startSoftDrop = () => {
+  stepInterval = quickInterval;
+  clearTimeout(stepTimeout);
+  step();
+};
+
+const stopSoftDrop = () => {
+  stepInterval = defaultInterval;
+};
+
 document.addEventListener('keydown', e => {
   e.preventDefault();
 
@@ -173,9 +183,7 @@ document.addEventListener('keydown', e => {
       state.hardDrop();
       break;
     case 'ArrowDown':
-      stepInterval = quickInterval;
-      clearTimeout(stepTimeout);
-      step();
+      startSoftDrop();
       break;
     case 'ArrowUp':
       state.rotate();
@@ -192,7 +200,25 @@ document.addEventListener('keydown', e => {
 document.addEventListener('keyup', e => {
   switch (e.key) {
     case 'ArrowDown':
-      stepInterval = defaultInterval;
+      stopSoftDrop();
       break;
   }
 });
+
+// Mobile controls
+
+const upButton = document.getElementById('up');
+const leftButton = document.getElementById('left');
+const rightButton = document.getElementById('right');
+const downButton = document.getElementById('down');
+const spaceButton = document.getElementById('space');
+
+upButton.addEventListener('click', () => state.rotate());
+leftButton.addEventListener('click', () => state.moveX(-1));
+rightButton.addEventListener('click', () => state.moveX(1));
+spaceButton.addEventListener('click', () => state.hardDrop());
+downButton.addEventListener('mousedown', () => startSoftDrop());
+downButton.addEventListener('mouseup', () => stopSoftDrop());
+downButton.addEventListener('touchstart', () => startSoftDrop());
+downButton.addEventListener('touchend', () => stopSoftDrop());
+downButton.addEventListener('touchcancel', () => stopSoftDrop());

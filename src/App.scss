@@ -35,27 +35,75 @@ canvas {
   height: auto;
 }
 
+button {
+  border: none;
+  background: #ccc;
+  color: #222;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: 0.05s ease-in-out all;
+
+  &:hover {
+    background: #aaa;
+  }
+}
+
 .controls {
   margin-bottom: 30px;
-
-  button {
-    border: none;
-    background: #ccc;
-    color: #222;
-    font-weight: bold;
-    padding: 10px 20px;
-    margin: 0 10px;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: 0.05s ease-in-out all;
-
-    &:hover {
-      background: #aaa;
-    }
-  }
 }
 
 p {
   max-width: 500px;
   text-align: center;
+}
+
+.mobile {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background: rgba(0, 0, 0, 0.8);
+
+  button {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+  }
+
+  .space {
+    display: flex;
+    align-items: flex-end;
+    padding-right: 40px;
+
+    button {
+      width: 200px;
+      height: 40px;
+    }
+  }
+
+  .arrows {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+
+    button {
+      width: 40px;
+      height: 40px;
+    }
+
+    .up {
+      display: flex;
+      justify-content: center;
+      grid-column: 1 / 4;
+    }
+  }
 }
