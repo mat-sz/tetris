@@ -3,6 +3,12 @@ body {
   overflow: hidden;
 }
 
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
 body {
   position: fixed;
   background: #111;
@@ -105,5 +111,11 @@ p {
       justify-content: center;
       grid-column: 1 / 4;
     }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .hide-mobile {
+    display: none;
   }
 }
